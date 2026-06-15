@@ -9,6 +9,7 @@ export function LoginScreen() {
     password,
     isLoading,
     errorMessage,
+    demoCredentials,
     setEmail,
     setPassword,
     handleLogin,
@@ -29,7 +30,6 @@ export function LoginScreen() {
         style={{
           width: 150,
           height: 150,
-          marginBottom: 24,
         }}
       />
 
@@ -39,7 +39,7 @@ export function LoginScreen() {
         cursorColor="blue"
         onChangeText={setEmail}
         style={{
-          width: '100%',
+          width: '70%',
           maxWidth: 320,
           borderWidth: 1,
           borderColor: '#ccc',
@@ -56,7 +56,7 @@ export function LoginScreen() {
         cursorColor="blue"
         onChangeText={setPassword}
         style={{
-          width: '100%',
+          width: '70%',
           maxWidth: 320,
           borderWidth: 1,
           borderColor: '#ccc',
@@ -68,8 +68,35 @@ export function LoginScreen() {
         value={password}
       />
 
+      <Text
+        style={{
+          width: '70%',
+          maxWidth: 320,
+          marginTop: 12,
+          color: '#f8fafc',
+          fontSize: 13,
+          textAlign: 'left',
+        }}
+      >
+        Login demo: {demoCredentials.email} / {demoCredentials.password}
+      </Text>
+
       {errorMessage ? (
-        <Text style={{ color: '#fff', marginTop: 12 }}>{errorMessage}</Text>
+        <Text
+          style={{
+            width: '70%',
+            maxWidth: 320,
+            marginTop: 12,
+            paddingHorizontal: 12,
+            paddingVertical: 10,
+            backgroundColor: 'rgba(127, 29, 29, 0.85)',
+            color: '#fff',
+            borderRadius: 8,
+            overflow: 'hidden',
+          }}
+        >
+          {errorMessage}
+        </Text>
       ) : null}
 
       <Pressable
@@ -78,7 +105,7 @@ export function LoginScreen() {
           backgroundColor: '#faf9f9',
           padding: 12,
           borderRadius: 8,
-          width: '100%',
+          width: '70%',
           maxWidth: 320,
           alignItems: 'center',
           marginTop: 16,
