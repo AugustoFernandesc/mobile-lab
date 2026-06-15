@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-import {
-  AuthRepositoryImpl,
-  DEMO_AUTH_CREDENTIALS,
-} from '../../data/repositories/AuthRepositoryImpl';
 import { LoginUseCase } from '../../domain/usecases/LoginUseCase';
 import type { RootStackParamList } from '../../../../routes/app.routes';
+import { AuthRepositoryImpl } from '../../data/repositories/AuthRepositoryImpl';
+import axios from 'axios';
 
 export function useLoginViewModel() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -33,10 +30,22 @@ export function useLoginViewModel() {
 
       return true;
     } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : 'Nao foi possivel realizar o login.'
-      );
-      return false;
+      if(axios.isAxiosError(error)){
+        const message = error.response?.data?.message;
+      
+        if (
+          message === 'Invalid email' ||
+          message === 'Invalid username or password'
+        ) {
+          setErrorMessage('Email ou senha inválidos.');
+        } else {
+          setErrorMessage('Erro ao realizar login.');
+        }
+      } else {
+        setErrorMessage('Erro ao realizar login.');
+      }
+        return false;
+
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +56,6 @@ export function useLoginViewModel() {
     password,
     isLoading,
     errorMessage,
-    demoCredentials: DEMO_AUTH_CREDENTIALS,
     setEmail,
     setPassword,
     handleLogin,

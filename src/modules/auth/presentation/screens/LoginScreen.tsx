@@ -9,7 +9,6 @@ export function LoginScreen() {
     password,
     isLoading,
     errorMessage,
-    demoCredentials,
     setEmail,
     setPassword,
     handleLogin,
@@ -42,7 +41,7 @@ export function LoginScreen() {
           width: '70%',
           maxWidth: 320,
           borderWidth: 1,
-          borderColor: '#ccc',
+          borderColor: errorMessage ? '#ff4d4f' : '#ccc',
           borderRadius: 8,
           padding: 12,
           backgroundColor: '#ccc',
@@ -59,7 +58,7 @@ export function LoginScreen() {
           width: '70%',
           maxWidth: 320,
           borderWidth: 1,
-          borderColor: '#ccc',
+          borderColor: errorMessage ? '#ff4d4f' : '#ccc',
           borderRadius: 8,
           padding: 12,
           marginTop: 12,
@@ -67,19 +66,6 @@ export function LoginScreen() {
         }}
         value={password}
       />
-
-      <Text
-        style={{
-          width: '70%',
-          maxWidth: 320,
-          marginTop: 12,
-          color: '#f8fafc',
-          fontSize: 13,
-          textAlign: 'left',
-        }}
-      >
-        Login demo: {demoCredentials.email} / {demoCredentials.password}
-      </Text>
 
       {errorMessage ? (
         <Text
