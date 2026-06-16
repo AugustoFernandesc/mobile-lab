@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Linking } from 'react-native';
+import { View, Text, Linking } from 'react-native';
 
 export function Footer() {
   return (
@@ -10,7 +10,7 @@ export function Footer() {
         alignItems: 'center',
       }}
     >
-      <Text style={{ color: '#fff', fontSize: 12 }}>
+      <Text style={{ color: '#604545', fontSize: 12 }}>
         © {new Date().getFullYear()}{' '}
         <Text
           style={{ color: 'red', fontWeight: 'bold' }}
