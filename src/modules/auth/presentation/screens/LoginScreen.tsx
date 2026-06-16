@@ -1,9 +1,11 @@
-import { Image, ImageBackground, Pressable, Text, TextInput } from 'react-native';
+import { Image, View } from 'react-native';
 
-import { Footer } from '../../../../shared/components/Footer';
+import { AppButton, AppInput, Footer } from '../../../../shared/components';
+import { useThemeSettings } from '../../../../shared/context/ThemeSettingsContext';
 import { useLoginViewModel } from '../viewmodels/useLoginViewModel';
 
 export function LoginScreen() {
+  const { appTheme } = useThemeSettings();
   const {
     email,
     password,
@@ -15,95 +17,70 @@ export function LoginScreen() {
   } = useLoginViewModel();
 
   return (
-    <ImageBackground
-      source={require('../../../../assets/imageFundo.jpeg')}
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 24,
-      }}
-    >
-      <Image
-        source={require('../../../../assets/logoMgFitClean.png')}
+    <>
+      <View
         style={{
-          width: 150,
-          height: 150,
-        }}
-      />
-
-      <TextInput
-        placeholder="Email"
-        autoCapitalize="none"
-        cursorColor="blue"
-        onChangeText={setEmail}
-        style={{
-          width: '70%',
-          maxWidth: 320,
-          borderWidth: 1,
-          borderColor: errorMessage ? '#ff4d4f' : '#ccc',
-          borderRadius: 8,
-          padding: 12,
-          backgroundColor: '#ccc',
-        }}
-        value={email}
-      />
-
-      <TextInput
-        placeholder="Senha"
-        secureTextEntry
-        cursorColor="blue"
-        onChangeText={setPassword}
-        style={{
-          width: '70%',
-          maxWidth: 320,
-          borderWidth: 1,
-          borderColor: errorMessage ? '#ff4d4f' : '#ccc',
-          borderRadius: 8,
-          padding: 12,
-          marginTop: 12,
-          backgroundColor: '#ccc',
-        }}
-        value={password}
-      />
-
-      {errorMessage ? (
-        <Text
-          style={{
-            width: '70%',
-            maxWidth: 320,
-            marginTop: 12,
-            paddingHorizontal: 12,
-            paddingVertical: 10,
-            backgroundColor: 'rgba(127, 29, 29, 0.85)',
-            color: '#fff',
-            borderRadius: 8,
-            overflow: 'hidden',
-          }}
-        >
-          {errorMessage}
-        </Text>
-      ) : null}
-
-      <Pressable
-        onPress={handleLogin}
-        style={{
-          backgroundColor: '#faf9f9',
-          padding: 12,
-          borderRadius: 8,
-          width: '70%',
-          maxWidth: 320,
-          alignItems: 'center',
-          marginTop: 16,
-          opacity: isLoading ? 0.7 : 1,
+          justifyContent: 'center',
+          flex: 1,
+          paddingHorizontal: appTheme.spacing.lg,
+          backgroundColor: appTheme.colors.background,
         }}
       >
-        <Text style={{ color: 'black', fontWeight: 'bold' }}>
-          {isLoading ? 'Entrando...' : 'Entrar'}
-        </Text>
-      </Pressable>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+          }}
+        >
+          <Image
+            source={require('../../../../assets/logoMGCode.png')}
+            style={{
+              width: 180,
+              height: 120,
+              alignSelf: 'center',
+            }}
+            resizeMode="contain"
+          />
 
+          <View
+            style={{
+              width: '100%',
+              maxWidth: 320,
+              gap: appTheme.spacing.lg,
+              backgroundColor: appTheme.colors.surface,
+              borderRadius: appTheme.radius.lg,
+              borderWidth: 1,
+              borderColor: appTheme.colors.border,
+              padding: appTheme.spacing.lg,
+            }}
+          >
+            <AppInput
+              value={email}
+              onChangeText={setEmail}
+              placeholder="Email"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              errorMessage={null}
+            />
+
+            <AppInput
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Senha"
+              secureTextEntry
+              errorMessage={errorMessage}
+            />
+
+            <AppButton
+              label={isLoading ? 'ENTRANDO...' : 'ENTRAR'}
+              onPress={handleLogin}
+              disabled={isLoading}
+            />
+          </View>
+        </View>
+      </View>
       <Footer />
-    </ImageBackground>
+    </>
   );
 }

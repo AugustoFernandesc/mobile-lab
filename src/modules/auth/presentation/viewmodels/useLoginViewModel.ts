@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { LoginUseCase } from '../../domain/usecases/LoginUseCase';
-import type { RootStackParamList } from '../../../../routes/app.routes';
-import { AuthRepositoryImpl } from '../../data/repositories/AuthRepositoryImpl';
 import axios from 'axios';
 
-export function useLoginViewModel() {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+import { useAuth } from '../context/AuthContext';
+import { AuthRepositoryImpl } from '../../data/repositories/AuthRepositoryImpl';
+import { LoginUseCase } from '../../domain/usecases/LoginUseCase';
 
-  const loginUseCase = new LoginUseCase(new AuthRepositoryImpl());  
+const loginUseCase = new LoginUseCase(new AuthRepositoryImpl());
+
+export function useLoginViewModel() {
+  const { completeSignIn } = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +17,7 @@ export function useLoginViewModel() {
 
   async function handleLogin(): Promise<boolean> {
     if (!email.trim() || !password.trim()) {
-      setErrorMessage('Preencha email e senha para continuar.');
+      setErrorMessage('Preencha login e senha para continuar.');
       return false;
     }
 
@@ -25,18 +25,15 @@ export function useLoginViewModel() {
       setIsLoading(true);
       setErrorMessage(null);
 
-      await loginUseCase.execute({ email, password });
-      navigation.navigate('Home');
+      const session = await loginUseCase.execute({ email, password });
+      await completeSignIn(session);
 
       return true;
     } catch (error) {
-      if(axios.isAxiosError(error)){
+      if (axios.isAxiosError(error)) {
         const message = error.response?.data?.message;
-      
-        if (
-          message === 'Invalid email' ||
-          message === 'Invalid username or password'
-        ) {
+
+        if (message === 'Invalid email' || message === 'Invalid username or password') {
           setErrorMessage('Email ou senha inválidos.');
         } else {
           setErrorMessage('Erro ao realizar login.');
@@ -44,8 +41,8 @@ export function useLoginViewModel() {
       } else {
         setErrorMessage('Erro ao realizar login.');
       }
-        return false;
 
+      return false;
     } finally {
       setIsLoading(false);
     }
