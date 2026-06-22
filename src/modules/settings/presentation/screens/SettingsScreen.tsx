@@ -1,9 +1,9 @@
 import { Pressable, Switch, Text, View } from 'react-native';
 
-import { Screen } from '../../shared/components';
-import { useThemeSettings } from '../../shared/context/ThemeSettingsContext';
+import { Screen } from '../../../../shared/components';
+import { useThemeSettings } from '../../../../shared/context/ThemeSettingsContext';
 
-export function SettingsPlaceholderScreen() {
+export function SettingsScreen() {
   const {
     appTheme,
     colorOptions,

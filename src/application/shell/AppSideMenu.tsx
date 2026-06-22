@@ -2,15 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 import { Animated, Image, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-import { getCurrentRouteName, navigate } from '../../../../routes/navigation.service';
-import type { AppStackParamList } from '../../../../routes/navigation.types';
-import { useAppShell } from '../../../../shared/context/AppShellContext';
-import { useThemeSettings } from '../../../../shared/context/ThemeSettingsContext';
+import { getCurrentRouteName, navigate } from '../../routes/navigation.service';
+import { getMenuItems, isAppRouteName, type AppRouteName } from '../../routes/app.modules';
+import { useAppShell } from '../../shared/context/AppShellContext';
+import { useThemeSettings } from '../../shared/context/ThemeSettingsContext';
 
 const EXPANDED_MENU_WIDTH = 220;
 const COMPACT_MENU_WIDTH = 95;
 
-type MenuRoute = 'Home' | 'Architecture' | 'Settings';
+const menuItems = getMenuItems();
 
 type MenuPalette = {
   background: string;
@@ -20,27 +20,10 @@ type MenuPalette = {
   logo: number;
 };
 
-const menuItems: Array<{
-  title: string;
-  icon: keyof typeof MaterialIcons.glyphMap;
-  route: MenuRoute;
-}> = [
-  {
-    title: 'Arquitetura',
-    icon: 'account-tree',
-    route: 'Architecture',
-  },
-  {
-    title: 'Configurações',
-    icon: 'settings',
-    route: 'Settings',
-  },
-];
-
 export function AppSideMenu() {
   const { isMenuOpen, closeMenu } = useAppShell();
   const { appTheme, isCompactMenu, sideMenuTheme } = useThemeSettings();
-  const [currentRouteName, setCurrentRouteName] = useState<MenuRoute>('Home');
+  const [activeRoute, setActiveRoute] = useState<AppRouteName>('Home');
   const menuWidth = isCompactMenu ? COMPACT_MENU_WIDTH : EXPANDED_MENU_WIDTH;
   const translateX = useRef(new Animated.Value(-EXPANDED_MENU_WIDTH)).current;
 
@@ -51,14 +34,14 @@ export function AppSideMenu() {
           card: 'rgba(255,255,255,0.08)',
           border: 'rgba(255,255,255,0.12)',
           text: '#FFFFFF',
-          logo: require('../../../../assets/mgCodeLogoLargeSidenavDark.png'),
+          logo: require('../../assets/mgCodeLogoLargeSidenavDark.png'),
         }
       : {
           background: '#FFFFFF',
           card: '#F3F6FA',
           border: '#D7E0EA',
           text: appTheme.colors.text,
-          logo: require('../../../../assets/mgCodeLogoLargeSidenavLight.png'),
+          logo: require('../../assets/mgCodeLogoLargeSidenavLight.png'),
         };
 
   useEffect(() => {
@@ -70,18 +53,12 @@ export function AppSideMenu() {
   }, [isMenuOpen, menuWidth, translateX]);
 
   useEffect(() => {
-    const routeName = getCurrentRouteName() as keyof AppStackParamList | null;
-
-    if (routeName === 'Architecture' || routeName === 'Settings' || routeName === 'Home') {
-      setCurrentRouteName(routeName);
-      return;
-    }
-
-    setCurrentRouteName('Home');
+    const routeName = getCurrentRouteName();
+    setActiveRoute(isAppRouteName(routeName) ? routeName : 'Home');
   }, [isMenuOpen]);
 
-  function handleNavigate(route: MenuRoute) {
-    setCurrentRouteName(route);
+  function handleNavigate(route: AppRouteName) {
+    setActiveRoute(route);
     closeMenu();
     setTimeout(() => navigate(route), 180);
   }
@@ -114,11 +91,11 @@ export function AppSideMenu() {
 
           <ScrollView contentContainerStyle={{ gap: appTheme.spacing.md }}>
             {menuItems.map((item) => {
-              const isActive = currentRouteName === item.route;
+              const isActive = activeRoute === item.route;
 
               return (
                 <Pressable
-                  key={item.title}
+                  key={item.route}
                   onPress={() => handleNavigate(item.route)}
                   style={{
                     backgroundColor: isActive ? appTheme.colors.primary : menuPalette.card,

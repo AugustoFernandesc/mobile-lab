@@ -1,8 +1,8 @@
 import { Pressable } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-import { useAppShell } from '../../../../shared/context/AppShellContext';
-import { useThemeSettings } from '../../../../shared/context/ThemeSettingsContext';
+import { useAppShell } from '../../shared/context/AppShellContext';
+import { useThemeSettings } from '../../shared/context/ThemeSettingsContext';
 
 export function AppHeaderMenuButton() {
   const { toggleMenu } = useAppShell();

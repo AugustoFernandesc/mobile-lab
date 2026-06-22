@@ -1,4 +1,4 @@
-import { Image, View } from 'react-native';
+import { Image, View, ImageBackground } from 'react-native';
 
 import { AppButton, AppInput, Footer } from '../../../../shared/components';
 import { useThemeSettings } from '../../../../shared/context/ThemeSettingsContext';
@@ -7,25 +7,31 @@ import { useLoginViewModel } from '../viewmodels/useLoginViewModel';
 export function LoginScreen() {
   const { appTheme } = useThemeSettings();
   const {
-    email,
+    cpf,
     password,
     isLoading,
     errorMessage,
-    setEmail,
+    setCpf,
     setPassword,
     handleLogin,
   } = useLoginViewModel();
 
   return (
     <>
-      <View
-        style={{
-          justifyContent: 'center',
-          flex: 1,
-          paddingHorizontal: appTheme.spacing.lg,
-          backgroundColor: appTheme.colors.background,
-        }}
+
+     <ImageBackground
+        source={require('../../../../assets/telalogin3.png')}
+        style={{ flex: 1 }}
+        resizeMode="cover"
       >
+        <View
+          style={{
+            justifyContent: 'center',
+            flex: 1,
+            paddingHorizontal: appTheme.spacing.lg,
+            backgroundColor: 'rgba(0,0,0,0.35)',
+          }}
+        >
         <View
           style={{
             alignItems: 'center',
@@ -34,10 +40,10 @@ export function LoginScreen() {
           }}
         >
           <Image
-            source={require('../../../../assets/logoMGCode.png')}
+            source={require('../../../../assets/logoMgFitClean.png')}
             style={{
               width: 180,
-              height: 120,
+              height: 180,
               alignSelf: 'center',
             }}
             resizeMode="contain"
@@ -56,11 +62,11 @@ export function LoginScreen() {
             }}
           >
             <AppInput
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Email"
+              value={cpf}
+              onChangeText={setCpf}
+              placeholder="CPF"
               autoCapitalize="none"
-              keyboardType="email-address"
+              keyboardType="phone-pad"
               errorMessage={null}
             />
 
@@ -81,6 +87,7 @@ export function LoginScreen() {
         </View>
       </View>
       <Footer />
+      </ImageBackground>
     </>
   );
 }

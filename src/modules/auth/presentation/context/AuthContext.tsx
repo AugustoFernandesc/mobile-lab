@@ -1,10 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 import { setUnauthorizedHandler } from '../../../../infra/http/api';
+import { tokenStorage } from '../../../../infra/storage/tokenStorage';
 import type { AuthSession } from '../../domain/entities/AuthSession';
-import { LogoutUseCase } from '../../domain/usecases/LogoutUseCase';
-import { RestoreSessionUseCase } from '../../domain/usecases/RestoreSessionUseCase';
-import { AuthSessionRepositoryImpl } from '../../data/repositories/AuthSessionRepositoryImpl';
 
 type AuthContextData = {
   session: AuthSession | null;
@@ -13,10 +11,6 @@ type AuthContextData = {
   completeSignIn: (session: AuthSession) => Promise<void>;
   signOut: () => Promise<void>;
 };
-
-const authSessionRepository = new AuthSessionRepositoryImpl();
-const restoreSessionUseCase = new RestoreSessionUseCase(authSessionRepository);
-const logoutUseCase = new LogoutUseCase(authSessionRepository);
 
 const AuthContext = createContext<AuthContextData | undefined>(undefined);
 
@@ -27,7 +21,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     async function bootstrapSession() {
       try {
-        const restoredSession = await restoreSessionUseCase.execute();
+        const restoredSession = await tokenStorage.getSession();
         setSession(restoredSession);
       } finally {
         setIsBootstrapping(false);
@@ -46,12 +40,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   async function completeSignIn(nextSession: AuthSession) {
-    await authSessionRepository.saveSession(nextSession);
+    await tokenStorage.saveSession(nextSession);
     setSession(nextSession);
   }
 
   async function signOut() {
-    await logoutUseCase.execute();
+    await tokenStorage.clearSession();
     setSession(null);
   }
 
