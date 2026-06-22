@@ -4,6 +4,7 @@ export const primaryColorOptions = [
   { id: 'orange', label: 'Laranja', value: '#F97316', darkValue: '#C2410C' },
   { id: 'red', label: 'Vermelho', value: '#DC2626', darkValue: '#991B1B' },
   { id: 'teal', label: 'Teal', value: '#0F766E', darkValue: '#115E59' },
+  { id: 'black', label: 'Preto', value: '#000000', darkValue: '#ffffff' },
 ] as const;
 
 export type PrimaryColorOptionId = (typeof primaryColorOptions)[number]['id'];

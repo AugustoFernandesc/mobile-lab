@@ -10,7 +10,7 @@ export function Footer() {
         alignItems: 'center',
       }}
     >
-      <Text style={{ color: '#604545', fontSize: 12 }}>
+      <Text style={{ color: '#ffffff', fontSize: 12 }}>
         © {new Date().getFullYear()}{' '}
         <Text
           style={{ color: 'red', fontWeight: 'bold' }}
