@@ -1,4 +1,4 @@
 export interface LoginCredentials {
-  email: string;
+  cpf: string;
   password: string;
 }
