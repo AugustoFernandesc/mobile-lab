@@ -1,17 +1,31 @@
-import type { AppIconName } from './module.types';
-import { homeModule } from '../modules/home/module.config';
-import { myWorkoutsModule } from '../modules/my-workouts/module.config';
-import { myRegistrationModule } from '../modules/my-registration/module.config';
-import { settingsModule } from '../modules/settings/module.config';
+import type { AppIconName, AppModule, ModuleRoute } from './module.types';
+import type { UserRole } from '../modules/common/auth/data/auth.types';
+import { homeModule } from '../modules/common/home/module.config';
+import { settingsModule } from '../modules/common/settings/module.config';
+import { myWorkoutsModule } from '../modules/aluno/my-workouts/module.config';
+import { myRegistrationModule } from '../modules/aluno/my-registration/module.config';
+import { personalWorkoutsModule } from '../modules/personal/my-workouts/module.config';
+import { personalStudentsModule } from '../modules/personal/my-students/module.config';
 
-export const appModules = [
+/** Módulos do aluno. */
+export const studentAppModules = [
   homeModule,
   myWorkoutsModule,
   myRegistrationModule,
   settingsModule,
 ] as const;
 
-export type AppRoute = (typeof appModules)[number]['routes'][number];
+/** Módulos do personal. */
+export const personalAppModules = [
+  homeModule,
+  personalWorkoutsModule,
+  personalStudentsModule,
+  settingsModule,
+] as const;
+
+type AppRoute =
+  | (typeof studentAppModules)[number]['routes'][number]
+  | (typeof personalAppModules)[number]['routes'][number];
 
 export type AppRouteName = AppRoute['name'];
 
@@ -23,23 +37,25 @@ export type MenuItem = {
   icon: AppIconName;
 };
 
-export function getAppRoutes(): readonly AppRoute[] {
-  return appModules.flatMap<AppRoute>((module) => module.routes);
+function modulesForRole(role: UserRole | undefined): readonly AppModule[] {
+  return role === 'personal' ? personalAppModules : studentAppModules;
 }
 
-export function getMenuItems(): MenuItem[] {
-  return getAppRoutes()
+function flattenRoutes(modules: readonly AppModule[]): readonly ModuleRoute[] {
+  return modules.flatMap((module) => module.routes);
+}
+
+export function getRoutesForRole(role: UserRole | undefined): readonly ModuleRoute[] {
+  return flattenRoutes(modulesForRole(role));
+}
+
+export function getMenuItemsForRole(role: UserRole | undefined): MenuItem[] {
+  return flattenRoutes(modulesForRole(role))
     .filter((route) => route.showInMenu)
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     .map((route) => ({
-      route: route.name,
+      route: route.name as AppRouteName,
       title: route.title,
       icon: route.icon ?? 'chevron-right',
     }));
-}
-
-const appRouteNames = new Set<string>(getAppRoutes().map((route) => route.name));
-
-export function isAppRouteName(value: string | null | undefined): value is AppRouteName {
-  return value != null && appRouteNames.has(value);
 }

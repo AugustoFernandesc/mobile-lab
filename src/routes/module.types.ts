@@ -10,6 +10,8 @@ export type ModuleRoute = {
   showInMenu?: boolean;
   icon?: AppIconName;
   order?: number;
+  /** Telas de detalhe (drill-down) usam seta de voltar em vez do botão de menu. */
+  hideMenuButton?: boolean;
 };
 
 export type AppModule = {

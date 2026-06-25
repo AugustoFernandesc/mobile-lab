@@ -1,89 +1,73 @@
+import { View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { AppHeaderMenuButton } from '../application/shell/AppHeaderMenuButton';
 import { AppHeaderLogoutButton } from '../application/shell/AppHeaderLogoutButton';
 import { AppSideMenu } from '../application/shell/AppSideMenu';
-import { LoginScreen } from '../modules/auth/presentation/screens/LoginScreen';
-import { SplashScreen } from '../modules/auth/presentation/screens/SplashScreen';
-import { PersonalHomeScreen } from '../modules/personal/presentation/screens/PersonalHomeScreen';
-import { useAuth } from '../modules/auth/presentation/context/AuthContext';
+import { LoginScreen } from '../modules/common/auth/presentation/screens/LoginScreen';
+import { SplashScreen } from '../modules/common/auth/presentation/screens/SplashScreen';
+import { useAuth } from '../modules/common/auth/presentation/context/AuthContext';
 import { useThemeSettings } from '../shared/context/ThemeSettingsContext';
-import { getAppRoutes } from './app.modules';
+import { getMenuItemsForRole, getRoutesForRole } from './app.modules';
+import type { UserRole } from '../modules/common/auth/data/auth.types';
 import type { AppStackParamList, AuthStackParamList } from './navigation.types';
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const AppStack = createNativeStackNavigator<AppStackParamList>();
-const PersonalStack = createNativeStackNavigator<{ PersonalHome: undefined }>();
-
-const appRoutes = getAppRoutes();
 
 function AuthRoutes() {
-  return (
-    <AuthStack.Navigator screenOptions={{ headerShown: false }}>
-      <AuthStack.Screen name="Login" component={LoginScreen} />
-    </AuthStack.Navigator>
-  );
-}
-
-function AppRoutesStack() {
   const { appTheme } = useThemeSettings();
 
   return (
-    <>
-      <AppStack.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          headerShadowVisible: false,
-          headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor: appTheme.colors.background,
-          },
-          contentStyle: {
-            backgroundColor: appTheme.colors.background,
-          },
-          headerTitleStyle: {
-            color: appTheme.colors.text,
-          },
-          headerTintColor: appTheme.colors.text,
-          headerLeft: () => <AppHeaderMenuButton />,
-          headerRight: () => <AppHeaderLogoutButton />,
-        }}
-      >
-        {appRoutes.map((route) => (
+    <View style={{ flex: 1, backgroundColor: appTheme.colors.background }}>
+      <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+        <AuthStack.Screen name="Login" component={LoginScreen} />
+      </AuthStack.Navigator>
+    </View>
+  );
+}
+
+function useShellScreenOptions() {
+  const { appTheme } = useThemeSettings();
+
+  return {
+    headerShadowVisible: false,
+    headerTitleAlign: 'center' as const,
+    headerStyle: { backgroundColor: appTheme.colors.background },
+    contentStyle: { backgroundColor: appTheme.colors.background },
+    headerTitleStyle: { color: appTheme.colors.text },
+    headerTintColor: appTheme.colors.text,
+    headerRight: () => <AppHeaderLogoutButton />,
+  };
+}
+
+/**
+ * Navegador único, dirigido pelos módulos do papel logado.
+ * Adicionar uma tela = criar um module.config e registrá-lo em app.modules.ts.
+ */
+function RoleRoutes({ role }: { role: UserRole | undefined }) {
+  const { appTheme } = useThemeSettings();
+  const screenOptions = useShellScreenOptions();
+  const routes = getRoutesForRole(role);
+  const menuItems = getMenuItemsForRole(role);
+
+  return (
+    <View style={{ flex: 1, backgroundColor: appTheme.colors.background }}>
+      <AppStack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
+        {routes.map((route) => (
           <AppStack.Screen
             key={route.name}
-            name={route.name}
+            name={route.name as keyof AppStackParamList}
             component={route.component}
-            options={{ title: route.title }}
+            options={{
+              title: route.title,
+              ...(route.hideMenuButton ? {} : { headerLeft: () => <AppHeaderMenuButton /> }),
+            }}
           />
         ))}
       </AppStack.Navigator>
-      <AppSideMenu />
-    </>
-  );
-}
-
-function PersonalRoutes() {
-  const { appTheme } = useThemeSettings();
-
-  return (
-    <PersonalStack.Navigator
-      screenOptions={{
-        headerTitleAlign: 'center',
-        headerShadowVisible: false,
-        headerStyle: { backgroundColor: appTheme.colors.background },
-        contentStyle: { backgroundColor: appTheme.colors.background },
-        headerTitleStyle: { color: appTheme.colors.text },
-        headerTintColor: appTheme.colors.text,
-        headerRight: () => <AppHeaderLogoutButton />,
-      }}
-    >
-      <PersonalStack.Screen
-        name="PersonalHome"
-        component={PersonalHomeScreen}
-        options={{ title: 'Área do Personal' }}
-      />
-    </PersonalStack.Navigator>
+      <AppSideMenu menuItems={menuItems} homeRoute="Home" />
+    </View>
   );
 }
 
@@ -98,5 +82,5 @@ export default function AppRoutes() {
     return <AuthRoutes />;
   }
 
-  return session?.user.role === 'personal' ? <PersonalRoutes /> : <AppRoutesStack />;
+  return <RoleRoutes role={session?.user.role} />;
 }
