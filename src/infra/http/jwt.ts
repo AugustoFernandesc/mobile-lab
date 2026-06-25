@@ -1,4 +1,4 @@
-import type { UserRole } from '../../modules/auth/domain/entities/User';
+import type { UserRole } from '../../modules/common/auth/data/auth.types';
 
 export interface JwtPayload {
   sub?: string;

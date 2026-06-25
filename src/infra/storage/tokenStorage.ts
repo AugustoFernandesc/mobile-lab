@@ -1,4 +1,4 @@
-import type { AuthSession } from '../../modules/auth/domain/entities/AuthSession';
+import type { AuthSession } from '../../modules/common/auth/data/auth.types';
 import { secureStorage } from './secureStorage';
 
 const ACCESS_TOKEN_KEY = 'mgcode.mobile_base.access_token';
