@@ -16,6 +16,7 @@ export function Screen({ children, scrollable = false }: ScreenProps) {
       contentContainerStyle={{
         flexGrow: 1,
         padding: appTheme.spacing.lg,
+        gap: appTheme.spacing.lg,
       }}
     >
       {children}

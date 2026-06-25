@@ -8,39 +8,59 @@ export const primaryColorOptions = [
 ] as const;
 
 export type PrimaryColorOptionId = (typeof primaryColorOptions)[number]['id'];
-export type SideMenuTheme = 'dark' | 'light';
+export type ColorScheme = 'light' | 'dark';
 
-export const theme = {
-  colors: {
-    primary: '#0F62FE',
-    primaryDark: '#0A3EA8',
-    background: '#F4F7FB',
-    surface: '#FFFFFF',
-    surfaceMuted: '#E9EEF5',
-    border: '#D7E0EA',
-    text: '#14213D',
-    textMuted: '#5C6B82',
-    success: '#198754',
-    danger: '#C62828',
-    dangerSoft: '#FDEDED',
-    overlay: 'rgba(15, 23, 42, 0.35)',
-    black: '#000000'
-  },
-  spacing: {
-    xs: 8,
-    sm: 12,
-    md: 16,
-    lg: 24,
-    xl: 32,
-  },
-  radius: {
-    sm: 10,
-    md: 16,
-    lg: 24,
-  },
+const spacing = {
+  xs: 8,
+  sm: 12,
+  md: 16,
+  lg: 24,
+  xl: 32,
 };
 
-export type AppTheme = typeof theme;
+const radius = {
+  sm: 10,
+  md: 16,
+  lg: 24,
+};
+
+const lightColors = {
+  primary: '#0F62FE',
+  primaryDark: '#0A3EA8',
+  background: '#F4F7FB',
+  surface: '#FFFFFF',
+  surfaceMuted: '#E9EEF5',
+  border: '#D7E0EA',
+  text: '#14213D',
+  textMuted: '#5C6B82',
+  success: '#198754',
+  danger: '#C62828',
+  dangerSoft: '#FDEDED',
+  overlay: 'rgba(15, 23, 42, 0.35)',
+  black: '#000000',
+};
+
+const darkColors: typeof lightColors = {
+  primary: '#0F62FE',
+  primaryDark: '#0A3EA8',
+  background: '#0B1220',
+  surface: '#131C2E',
+  surfaceMuted: '#1C2740',
+  border: '#2A3651',
+  text: '#F4F7FB',
+  textMuted: '#9AA7BD',
+  success: '#2FB67C',
+  danger: '#F87171',
+  dangerSoft: '#3A1D1D',
+  overlay: 'rgba(0, 0, 0, 0.5)',
+  black: '#000000',
+};
+
+export type AppTheme = {
+  colors: typeof lightColors;
+  spacing: typeof spacing;
+  radius: typeof radius;
+};
 
 export function getPrimaryColorOption(primaryColorId: PrimaryColorOptionId) {
   return (
@@ -48,15 +68,17 @@ export function getPrimaryColorOption(primaryColorId: PrimaryColorOptionId) {
   );
 }
 
-export function buildTheme(primaryColorId: PrimaryColorOptionId): AppTheme {
+export function buildTheme(scheme: ColorScheme, primaryColorId: PrimaryColorOptionId): AppTheme {
+  const baseColors = scheme === 'dark' ? darkColors : lightColors;
   const primaryColor = getPrimaryColorOption(primaryColorId);
 
   return {
-    ...theme,
     colors: {
-      ...theme.colors,
+      ...baseColors,
       primary: primaryColor.value,
       primaryDark: primaryColor.darkValue,
     },
+    spacing,
+    radius,
   };
 }
