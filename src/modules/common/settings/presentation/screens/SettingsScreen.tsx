@@ -1,7 +1,7 @@
 import { Pressable, Switch, Text, View } from 'react-native';
 
-import { Screen } from '../../../../shared/components';
-import { useThemeSettings } from '../../../../shared/context/ThemeSettingsContext';
+import { Screen } from '../../../../../shared/components';
+import { useThemeSettings } from '../../../../../shared/context/ThemeSettingsContext';
 
 export function SettingsScreen() {
   const {
@@ -9,32 +9,14 @@ export function SettingsScreen() {
     colorOptions,
     primaryColorId,
     isCompactMenu,
-    sideMenuTheme,
     setPrimaryColorId,
     setCompactMenu,
-    setSideMenuTheme,
   } = useThemeSettings();
 
   return (
     <Screen scrollable>
-      <View
-        style={{
-          backgroundColor: appTheme.colors.surface,
-          borderRadius: appTheme.radius.lg,
-          borderWidth: 1,
-          borderColor: appTheme.colors.border,
-          padding: appTheme.spacing.lg,
-        }}
-      >
-        <Text style={{ color: appTheme.colors.text, fontSize: 28, fontWeight: '700' }}>
-          Configurações da Base
-        </Text>
-        <Text style={{ color: appTheme.colors.textMuted, marginTop: appTheme.spacing.xs }}>
-          Personalize a identidade visual e o comportamento do menu lateral desta template.
-        </Text>
-      </View>
 
-      <View style={{ marginTop: appTheme.spacing.lg, gap: appTheme.spacing.lg }}>
+      <View style={{ marginTop: appTheme.spacing.xs, gap: appTheme.spacing.lg }}>
         <View
           style={{
             backgroundColor: appTheme.colors.surface,
@@ -48,7 +30,7 @@ export function SettingsScreen() {
             Cor primária
           </Text>
           <Text style={{ color: appTheme.colors.textMuted, marginTop: appTheme.spacing.xs }}>
-            Escolha uma das cinco opcoes para destacar botoes, acentos e interacoes.
+            Escolha uma das opcoes para destacar botoes, acentos e interacoes.
           </Text>
 
           <View
@@ -134,50 +116,6 @@ export function SettingsScreen() {
                 true: appTheme.colors.primary,
               }}
             />
-          </View>
-
-          <View>
-            <Text style={{ color: appTheme.colors.text, fontSize: 18, fontWeight: '700' }}>
-              Tema do menu lateral
-            </Text>
-            <Text style={{ color: appTheme.colors.textMuted, marginTop: 4 }}>
-              Alterne entre uma navegacao clara ou escura para combinar com a identidade do app.
-            </Text>
-
-            <View style={{ flexDirection: 'row', gap: appTheme.spacing.sm, marginTop: 14 }}>
-              {(['dark', 'light'] as const).map((option) => {
-                const isActive = sideMenuTheme === option;
-
-                return (
-                  <Pressable
-                    key={option}
-                    onPress={() => setSideMenuTheme(option)}
-                    style={{
-                      flex: 1,
-                      backgroundColor: isActive
-                        ? appTheme.colors.primary
-                        : appTheme.colors.surfaceMuted,
-                      borderRadius: appTheme.radius.md,
-                      paddingVertical: 14,
-                      alignItems: 'center',
-                      borderWidth: 1,
-                      borderColor: isActive
-                        ? appTheme.colors.primaryDark
-                        : appTheme.colors.border,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: isActive ? '#FFFFFF' : appTheme.colors.text,
-                        fontWeight: '700',
-                      }}
-                    >
-                      {option === 'dark' ? 'Escuro' : 'Claro'}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
           </View>
         </View>
       </View>

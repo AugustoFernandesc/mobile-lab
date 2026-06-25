@@ -1,4 +1,4 @@
-import type { AppModule } from '../../routes/module.types';
+import type { AppModule } from '../../../routes/module.types';
 import { SettingsScreen } from './presentation/screens/SettingsScreen';
 
 export const settingsModule = {
