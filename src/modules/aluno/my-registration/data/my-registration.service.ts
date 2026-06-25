@@ -1,4 +1,4 @@
-import { api } from '../../../infra/http/api';
+import { api } from '../../../../infra/http/api';
 import { MyRegistrationResponse } from './my-registration.types';
 
 export async function getMyRegistrationSummary(studentId: string) {

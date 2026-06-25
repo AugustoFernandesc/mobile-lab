@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useAuth } from '../../../auth/presentation/context/AuthContext';
+import { useAuth } from '../../../../common/auth/presentation/context/AuthContext';
 import { getMyRegistrationSummary } from '../../data/my-registration.service';
 
 export function useMyRegistration() {

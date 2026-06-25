@@ -1,4 +1,4 @@
-import type { AppModule } from '../../routes/module.types';
+import type { AppModule } from '../../../routes/module.types';
 import { MyRegistrationScreen } from './presentation/screens/MyRegistrationScreen';
 
 export const myRegistrationModule = {
