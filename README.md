@@ -20,7 +20,8 @@ Aplicação React Native desenvolvida com Expo e TypeScript.
 - Logout
 - Navegação pública e autenticada
 - Configurações persistidas
-- Tema configurável
+- Tema claro/escuro automático (segue o sistema do dispositivo)
+- Cor primária configurável
 - Menu lateral
 - Infraestrutura HTTP centralizada
 
@@ -284,11 +285,12 @@ Contextos disponíveis:
 
 ## Configurações
 
+O modo **claro/escuro segue automaticamente o sistema do dispositivo** (`useColorScheme` do React Native) — não há controle manual no app. O `ThemeSettingsContext` combina o esquema do sistema com a cor primária escolhida via `buildTheme(scheme, primaryColorId)` (`src/shared/theme/index.ts`).
+
 A aplicação possui configurações persistidas localmente para:
 
 - cor principal
 - modo compacto do menu lateral
-- tema visual da sidebar
 
 ## Validação
 
