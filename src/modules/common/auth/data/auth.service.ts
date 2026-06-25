@@ -1,9 +1,12 @@
-import { api } from '../../../infra/http/api';
-import { decodeJwtPayload } from '../../../infra/http/jwt';
-import type { AuthSession } from '../domain/entities/AuthSession';
-import type { LoginCredentials } from '../domain/entities/LoginCredentials';
-import type { UserRole } from '../domain/entities/User';
-import type { LoginRequestDTO, LoginResponseDTO } from './auth.types';
+import { api } from '../../../../infra/http/api';
+import { decodeJwtPayload } from '../../../../infra/http/jwt';
+import type {
+  AuthSession,
+  LoginCredentials,
+  LoginRequestDTO,
+  LoginResponseDTO,
+  UserRole,
+} from './auth.types';
 
 function removeBearerPrefix(token: string) {
   return token.replace(/^Bearer\s+/i, '');

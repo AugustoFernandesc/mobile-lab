@@ -1,8 +1,8 @@
 import { Image, View, ImageBackground } from 'react-native';
 
-import { AppButton, AppInput, Footer } from '../../../../shared/components';
-import { useThemeSettings } from '../../../../shared/context/ThemeSettingsContext';
-import { useLoginViewModel } from '../viewmodels/useLoginViewModel';
+import { AppButton, AppInput, Footer } from '../../../../../shared/components';
+import { useThemeSettings } from '../../../../../shared/context/ThemeSettingsContext';
+import { useLogin } from '../hooks/useLogin';
 
 export function LoginScreen() {
   const { appTheme } = useThemeSettings();
@@ -14,13 +14,13 @@ export function LoginScreen() {
     setCpf,
     setPassword,
     handleLogin,
-  } = useLoginViewModel();
+  } = useLogin();
 
   return (
     <>
 
      <ImageBackground
-        source={require('../../../../assets/telalogin3.png')}
+        source={require('../../../../../assets/telalogin2.png')}
         style={{ flex: 1 }}
         resizeMode="cover"
       >
@@ -40,7 +40,7 @@ export function LoginScreen() {
           }}
         >
           <Image
-            source={require('../../../../assets/logoMgFitClean.png')}
+            source={require('../../../../../assets/logoMgFitClean.png')}
             style={{
               width: 180,
               height: 180,
@@ -54,9 +54,7 @@ export function LoginScreen() {
               width: '100%',
               maxWidth: 320,
               gap: appTheme.spacing.lg,
-              backgroundColor: appTheme.colors.surface,
               borderRadius: appTheme.radius.lg,
-              borderWidth: 1,
               borderColor: appTheme.colors.border,
               padding: appTheme.spacing.lg,
             }}

@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
-import { setUnauthorizedHandler } from '../../../../infra/http/api';
-import { tokenStorage } from '../../../../infra/storage/tokenStorage';
-import type { AuthSession } from '../../domain/entities/AuthSession';
+import { setUnauthorizedHandler } from '../../../../../infra/http/api';
+import { tokenStorage } from '../../../../../infra/storage/tokenStorage';
+import type { AuthSession } from '../../data/auth.types';
 
 type AuthContextData = {
   session: AuthSession | null;
