@@ -1,4 +1,4 @@
-import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 
 import { AppProviders } from './providers/AppProviders';
@@ -7,12 +7,14 @@ import { navigationRef } from '../routes/navigation.service';
 import { useThemeSettings } from '../shared/context/ThemeSettingsContext';
 
 function AppNavigation() {
-  const { appTheme } = useThemeSettings();
+  const { appTheme, colorScheme } = useThemeSettings();
+
+  const baseNavigationTheme = colorScheme === 'dark' ? DarkTheme : DefaultTheme;
 
   const navigationTheme = {
-    ...DefaultTheme,
+    ...baseNavigationTheme,
     colors: {
-      ...DefaultTheme.colors,
+      ...baseNavigationTheme.colors,
       primary: appTheme.colors.primary,
       background: appTheme.colors.background,
       card: appTheme.colors.background,
@@ -23,7 +25,7 @@ function AppNavigation() {
 
   return (
     <>
-      <StatusBar style="dark" />
+      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
       <NavigationContainer ref={navigationRef} theme={navigationTheme}>
         <AppRoutes />
       </NavigationContainer>

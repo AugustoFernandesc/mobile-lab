@@ -1,16 +1,19 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ComponentProps } from 'react';
 import { Animated, Image, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { getCurrentRouteName, navigate } from '../../routes/navigation.service';
-import { getMenuItems, isAppRouteName, type AppRouteName } from '../../routes/app.modules';
 import { useAppShell } from '../../shared/context/AppShellContext';
 import { useThemeSettings } from '../../shared/context/ThemeSettingsContext';
 
-const EXPANDED_MENU_WIDTH = 220;
+const EXPANDED_MENU_WIDTH = 210;
 const COMPACT_MENU_WIDTH = 95;
 
-const menuItems = getMenuItems();
+export type SideMenuItem = {
+  route: string;
+  title: string;
+  icon: ComponentProps<typeof MaterialIcons>['name'];
+};
 
 type MenuPalette = {
   background: string;
@@ -20,28 +23,33 @@ type MenuPalette = {
   logo: number;
 };
 
-export function AppSideMenu() {
+type AppSideMenuProps = {
+  menuItems: SideMenuItem[];
+  homeRoute: string;
+};
+
+export function AppSideMenu({ menuItems, homeRoute }: AppSideMenuProps) {
   const { isMenuOpen, closeMenu } = useAppShell();
-  const { appTheme, isCompactMenu, sideMenuTheme } = useThemeSettings();
-  const [activeRoute, setActiveRoute] = useState<AppRouteName>('Home');
+  const { appTheme, isCompactMenu, colorScheme } = useThemeSettings();
+  const [activeRoute, setActiveRoute] = useState<string>(homeRoute);
   const menuWidth = isCompactMenu ? COMPACT_MENU_WIDTH : EXPANDED_MENU_WIDTH;
   const translateX = useRef(new Animated.Value(-EXPANDED_MENU_WIDTH)).current;
 
   const menuPalette: MenuPalette =
-    sideMenuTheme === 'dark'
+    colorScheme === 'dark'
       ? {
           background: '#0B1220',
           card: 'rgba(255,255,255,0.08)',
           border: 'rgba(255,255,255,0.12)',
           text: '#FFFFFF',
-          logo: require('../../assets/mgCodeLogoLargeSidenavDark.png'),
+          logo: require('../../assets/profit_logo.png'),
         }
       : {
           background: '#FFFFFF',
           card: '#F3F6FA',
           border: '#D7E0EA',
           text: appTheme.colors.text,
-          logo: require('../../assets/mgCodeLogoLargeSidenavLight.png'),
+          logo: require('../../assets/profit_logo.png'),
         };
 
   useEffect(() => {
@@ -53,11 +61,10 @@ export function AppSideMenu() {
   }, [isMenuOpen, menuWidth, translateX]);
 
   useEffect(() => {
-    const routeName = getCurrentRouteName();
-    setActiveRoute(isAppRouteName(routeName) ? routeName : 'Home');
-  }, [isMenuOpen]);
+    setActiveRoute(getCurrentRouteName() ?? homeRoute);
+  }, [isMenuOpen, homeRoute]);
 
-  function handleNavigate(route: AppRouteName) {
+  function handleNavigate(route: string) {
     setActiveRoute(route);
     closeMenu();
     setTimeout(() => navigate(route), 180);
@@ -74,9 +81,12 @@ export function AppSideMenu() {
             paddingTop: 54,
             paddingHorizontal: isCompactMenu ? appTheme.spacing.sm : appTheme.spacing.lg,
             overflow: 'hidden',
+            borderTopRightRadius: 35,
+            borderBottomRightRadius: 35
+
           }}
         >
-          <Pressable onPress={() => handleNavigate('Home')}>
+          <Pressable onPress={() => handleNavigate(homeRoute)}>
             <Image
               source={menuPalette.logo}
               resizeMode="contain"
@@ -107,12 +117,12 @@ export function AppSideMenu() {
                     alignItems: 'center',
                     justifyContent: isCompactMenu ? 'center' : 'flex-start',
                     gap: 12,
-                    minHeight: 64,
+                    minHeight: 6,
                   }}
                 >
                   <MaterialIcons
                     name={item.icon}
-                    size={24}
+                    size={18}
                     color={isActive ? '#FFFFFF' : menuPalette.text}
                   />
                   {!isCompactMenu ? (

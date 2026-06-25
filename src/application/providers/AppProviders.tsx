@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { AuthProvider } from '../../modules/auth/presentation/context/AuthContext';
+import { AuthProvider } from '../../modules/common/auth/presentation/context/AuthContext';
 import { AppShellProvider } from '../../shared/context/AppShellContext';
 import { AppFeedbackProvider } from '../../shared/context/AppFeedbackContext';
 import { ThemeSettingsProvider } from '../../shared/context/ThemeSettingsContext';

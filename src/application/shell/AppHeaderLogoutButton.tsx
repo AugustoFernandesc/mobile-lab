@@ -2,7 +2,7 @@ import { Pressable } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { useThemeSettings } from '../../shared/context/ThemeSettingsContext';
-import { useAuth } from '../../modules/auth/presentation/context/AuthContext';
+import { useAuth } from '../../modules/common/auth/presentation/context/AuthContext';
 
 export function AppHeaderLogoutButton() {
   const { signOut } = useAuth();
